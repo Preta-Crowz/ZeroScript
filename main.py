@@ -27,11 +27,11 @@ if __name__ == "__main__":
                 curr.append(startpoint[char])
                 continue
             if char == "\'":
-                if not len(curr) or (len(curr) and curr[-1] != "byte"):
+                if not len(curr) and curr[-1] != "byte":
                     curr.append("byte")
                     continue
             if char == "\"":
-                if not len(curr) or (len(curr) and curr[-1] != "string"):
+                if not len(curr) and curr[-1] != "string":
                     curr.append("string")
                     continue
             script += char
