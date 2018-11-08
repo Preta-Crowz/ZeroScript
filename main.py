@@ -9,12 +9,17 @@ endpoint = {"list":"]","tuple":")","set":">","dict":"}","byte":"\'","string":"\"
 
 
 
+def obj(inp,type):
+    while inp:
+        char = inp.pop()
+
 if __name__ == "__main__":
     while True:
         tag = ">>> "
         if curr != []: tag = "... "
         raw = input(tag)
-        for char in raw:
+        while raw:
+            char = raw.pop()
             if char == ";" and curr == []:
                 code.append(script)
                 script = ""
