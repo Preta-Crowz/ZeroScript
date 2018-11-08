@@ -10,16 +10,18 @@ endpoint = {"list":"]","tuple":")","set":">","dict":"}","byte":"\'","string":"\"
 
 
 def obj(inp,type):
+    inp = list(inp)
     while inp:
-        char = inp.pop()
+        char = inp.pop(0)
 
 if __name__ == "__main__":
     while True:
         tag = ">>> "
         if curr != []: tag = "... "
         raw = input(tag)
+        raw = list(raw)
         while raw:
-            char = raw.pop()
+            char = raw.pop(0)
             if char == ";" and curr == []:
                 code.append(script)
                 script = ""
@@ -32,11 +34,15 @@ if __name__ == "__main__":
                 curr.append(startpoint[char])
                 continue
             if char == "\'":
-                if not len(curr) and curr[-1] != "byte":
+                if len(curr) == 0:
+                    continue
+                elif curr[-1] != "byte":
                     curr.append("byte")
                     continue
             if char == "\"":
-                if not len(curr) and curr[-1] != "string":
+                if len(curr) == 0:
+                    continue
+                elif curr[-1] != "string":
                     curr.append("string")
                     continue
             script += char
