@@ -21,9 +21,10 @@ func name = (input) {
 }
 '''
 do = func["do"]
-if not int(input("0. Open File\n1. Interpreter Mode\n> ")):
+mode = int(input("0. Open File\n1. Interpreter Mode\n2. Debug Mode\n> "))
+if mode == 0:
     do(re.split("[\n;]",open(input("file > ")).read()))
-else:
+elif mode == 1 or mode == 2:
     while True:
-        try: do(re.split("[\n;]",input("::> ")),interpret=True)
+        try: do(re.split("[\n;]",input("::> ")),interpret=True,debug=(mode==2))
         except Exception as e: print(e)

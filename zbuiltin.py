@@ -6,10 +6,17 @@ var = {}
 def log(value): print(do(value).value)
 func["log"] = log
 
+func["end"] = exit
+func["close_the_console_and_zeroscript_process_from_my_system"] = exit
+
 def do(script,**kargs):
     global func,var
-    if type(script) == str: script = [script]
+    if type(script) == str:
+        if kargs.get("execute",False):
+            script = eval(script)
+        script = re.split("[\n;]",script)
     for c in script:
+        if kargs.get("debug",False): print(c)
         if c == "": pass
         elif re.match("^var +[^ ]+ *= *\".*\"$",c):
             m = re.match("^var +(?P<varname>[^ ]+) *= *(?P<value>\".*\")$",c)
@@ -26,9 +33,15 @@ def do(script,**kargs):
             for thing in things:
                 print(do(thing,call=True).value,end="")
             print("")'''
-        elif re.match("^[^ \d][^ ]*\(.*\)$",c):
-            m = re.match("^(?P<fname>[^ ]*)\((?P<args>.*)\)$",c)
-            return func[m["fname"]](*str.split(m["args"],","))
+        elif re.match("^[^ \d][^ ]*?\(.*\)$",c):
+            m = re.match("^(?P<fname>[^ ]*?)\((?P<args>.*)\)$",c)
+            fname = m["fname"]
+            if not fname in func:
+                raise NameError(f"Function {fname} is not defined.")
+            elif fname == "do":
+                do(*str.split(m["args"],","),execute=True)
+            else:
+                return func[fname](*str.split(m["args"],","))
         elif re.match("^[^ \d][^ ]*$",c):
             try:
                 if kargs.get("interpret",False) and not kargs.get("call",False): print(var[c].raw)
