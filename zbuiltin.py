@@ -13,12 +13,14 @@ func["close_the_console_and_zeroscript_process_from_my_system"] = exit
 
 def do(script,**kargs):
     global func,var
+    if type(script) == zstr:
+        script = script.raw
     if type(script) == str:
         script = re.split("[\n;]",script)
         if kargs.get("execute",False):
             r = None
             for c in script:
-                last = do(script)
+                last = do([eval(c)])
                 r = last if not last is None else r
             return r
     for c in script:
@@ -45,9 +47,15 @@ def do(script,**kargs):
             if not fname in func:
                 raise NameError(f"Function {fname} is not defined.")
             elif fname == "do":
-                do(*str.split(m["args"],","),execute=True)
+                fargs = []
+                for arg in str.split(m["args"],","):
+                    fargs.append(do(arg))
+                return do(*fargs,execute=True)
             else:
-                return func[fname](*str.split(m["args"],","))
+                fargs = []
+                for arg in str.split(m["args"],","):
+                    fargs.append(do(arg))
+                return func[fname](*fargs)
         elif re.match("^[^ \d][^ ]*$",c):
             try:
                 if kargs.get("interpret",False) and not kargs.get("call",False): print(var[c].raw)
