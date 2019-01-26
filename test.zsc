@@ -1,1 +1,1 @@
-var test = "asdf";"asdfasdfasdfasdfa";log(test)
+var test = "asdf";"asdfasdfasdfasdfa";log(test);var log = "this var is named log";do("log(\"log\")");
