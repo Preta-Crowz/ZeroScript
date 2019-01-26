@@ -14,9 +14,13 @@ func["close_the_console_and_zeroscript_process_from_my_system"] = exit
 def do(script,**kargs):
     global func,var
     if type(script) == str:
-        if kargs.get("execute",False):
-            script = eval(script)
         script = re.split("[\n;]",script)
+        if kargs.get("execute",False):
+            r = None
+            for c in script:
+                last = do(script)
+                r = last if not last is None else r
+            return r
     for c in script:
         if kargs.get("debug",False): print(c)
         if c == "": pass
