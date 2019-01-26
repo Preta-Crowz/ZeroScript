@@ -7,6 +7,8 @@ def log(value): print(do(value).value)
 func["log"] = log
 
 func["end"] = exit
+func["close"] = exit
+func["quit"] = exit
 func["close_the_console_and_zeroscript_process_from_my_system"] = exit
 
 def do(script,**kargs):
