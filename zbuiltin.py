@@ -35,13 +35,7 @@ def do(script,**kargs):
         elif re.match("^\".*\"$",c):
             obj = zstr(re.match("^\"(?P<value>.*)\"$",c)["value"])
             if kargs.get("interpret",False) and not kargs.get("call",False): print(obj.raw)
-            return obj;'''
-        elif re.match("^log\(.*\)$",c):
-            things = re.match("^log\((?P<something>.*)\)$",c)["something"]
-            things = re.split("[\n;]",things)
-            for thing in things:
-                print(do(thing,call=True).value,end="")
-            print("")'''
+            return obj
         elif re.match("^[^ \d][^ ]*?\(.*\)$",c):
             m = re.match("^(?P<fname>[^ ]*?)\((?P<args>.*)\)$",c)
             fname = m["fname"]
