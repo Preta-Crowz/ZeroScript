@@ -26,7 +26,7 @@ def do(script,**kargs):
             return r
     for c in script:
         if kargs.get("debug",False): print(c)
-        if c == "": pass
+        if c == "": continue
         elif re.match("^var +[^ ]+ *= *\".*\"$",c):
             m = re.match("^var +(?P<varname>[^ ]+) *= *(?P<value>\".*\")$",c)
             value = do(m["value"])
@@ -56,7 +56,7 @@ def do(script,**kargs):
                 if kargs.get("interpret",False) and not kargs.get("call",False): print(var[c].raw)
                 return var[c]
             except:
-                raise NameError(f"{c} is not defined.")
+                raise NameError(f"Variable {c} is not defined.")
         else:
             raise SyntaxError("Invalid syntax")
 func["do"] = do
