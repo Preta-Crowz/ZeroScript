@@ -16,7 +16,7 @@ func["close"] = exit
 func["close_the_console_and_zeroscript_process_from_my_system"] = exit
 
 def inp(text=None):
-    return zstr(input(text.value) if text is not None else input())
+    return zstr(input(text.value if text is not None else ""))
 func["input"] = inp
 
 def do(script,**kargs):
