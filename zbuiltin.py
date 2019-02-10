@@ -39,8 +39,26 @@ def do(script,**kargs):
             value = do(m["value"])
             var[m["varname"]] = value
             return value
+        elif re.match("^[^ ]+ *= *.*$",c):
+            m = re.match("^(?P<varname>[^ ]+) *= *(?P<value>.*)$",c)
+            vname = m["varname"]
+            if not vname in var:
+                raise NameError(f"Variable {c} is not defined.")
+            value = do(m["value"])
+            var[vname] = value
+            return value
+        elif re.match("^[^ \d\.][^ \.]*\.[^ \.]+$",c):
+            m = re.match("(?P<parent>^[^ \d\.][^ ]*)\.(?P<sub>[^ \.]+)$",c)
+            parent = do(m["parent"])
+            sub = getattr(parent,m["sub"])
+            if kargs.get("interpret",False) and not kargs.get("call",False): log(sub)
+            return sub
         elif re.match("^\".*\"$",c):
             obj = zstr(re.match("^\"(?P<value>.*)\"$",c)["value"])
+            if kargs.get("interpret",False) and not kargs.get("call",False): print(obj.raw)
+            return obj
+        elif re.match("^\d+$",c):
+            obj = zint(re.match("^(?P<value>\d+)$",c)["value"])
             if kargs.get("interpret",False) and not kargs.get("call",False): print(obj.raw)
             return obj
         elif re.match("^[^ \d][^ ]*?\(.*\)$",c):
@@ -60,7 +78,7 @@ def do(script,**kargs):
                 v = func[fname](*fargs)
             if kargs.get("interpret",False) and not kargs.get("call",False): log(v)
             return v
-        elif re.match("^[^ \d][^ ]*$",c):
+        elif re.match("^[^ \d\.][^ \.]*$",c):
             try:
                 if kargs.get("interpret",False) and not kargs.get("call",False): print(var[c].raw)
                 return var[c]
