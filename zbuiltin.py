@@ -76,7 +76,7 @@ def do(script,**kargs):
                 for arg in str.split(m["args"],","):
                     fargs.append(do(arg))
                 v = func[fname](*fargs)
-            if kargs.get("interpret",False) and not kargs.get("call",False): log(v)
+            # if kargs.get("interpret",False) and not kargs.get("call",False): log(v)
             return v
         elif re.match("^[^ \d\.][^ \.]*$",c):
             try:
