@@ -9,7 +9,10 @@ def log(value):
     return v
 func["log"] = log
 
+func["x"] = exit
+func["ep"] = exit
 func["end"] = exit
+func["done"] = exit
 func["exit"] = exit
 func["quit"] = exit
 func["close"] = exit
@@ -18,6 +21,10 @@ func["close_the_console_and_zeroscript_process_from_my_system"] = exit
 def inp(text=None):
     return zstr(input(text.value if text is not None else ""))
 func["input"] = inp
+
+def getFunc(name):
+    return func[name]
+func["getFunc"] = getFunc
 
 def do(script,**kargs):
     global func,var
@@ -53,7 +60,7 @@ def do(script,**kargs):
             sub = getattr(parent,m["sub"])
             if kargs.get("interpret",False) and not kargs.get("call",False): log(sub)
             return sub
-        elif re.match("^\".*\"$",c):
+        elif re.match("^\".*[^\\\\]*\"$",c):
             obj = zstr(re.match("^\"(?P<value>.*)\"$",c)["value"])
             if kargs.get("interpret",False) and not kargs.get("call",False): print(obj.raw)
             return obj
