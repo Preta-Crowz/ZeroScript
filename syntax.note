@@ -1,0 +1,32 @@
+args => work
+f(args){
+    work;
+};
+
+args => condition => work
+f(args){
+    if condition{
+        work;
+    };
+};
+
+args => condition => work => final
+f(args){
+    if condition{
+        work;
+    };
+    final;
+};
+
+args => condition => work => final <= another
+f(args){
+    if condition{
+        work;
+    } else {
+        another
+    };
+    final;
+};
+
+f1 => f2 => f3 => f4 => ...
+f1();f2();f3();f4();...
