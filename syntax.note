@@ -35,5 +35,5 @@ f add = ( num ) => { return num + 1};
 f rev = ( num ) => { return -num };
 f dbl = ( num ) => { return num * 2 };
 f cub = ( num ) => { return num ** 3 };
-res = fc[add => rev => dbl => cub](1);
-log(res);
+fc res = add => rev => dbl => cub
+log(res(1));
