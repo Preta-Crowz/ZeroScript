@@ -3,10 +3,11 @@ from zclass import *
 func = {}
 var = {}
 
-def log(value):
-    v = do(value).value
-    print(v)
-    return v
+def log(value=None):
+    if value is not None:
+        v = do(value).value
+        print(v)
+        return v
 func["log"] = log
 
 func["x"] = exit
@@ -23,13 +24,14 @@ def inp(text=None):
 func["input"] = inp
 
 def getFunc(name):
-    return func[name]
+    v = do(name).value
+    return func[v]
 func["getFunc"] = getFunc
 
 def do(script,**kargs):
     global func,var
     if type(script) == zstr:
-        script = script.raw
+        script = script._raw()
     if type(script) == str:
         script = re.split("[\n;]",script)
         if kargs.get("execute",False):
@@ -62,11 +64,15 @@ def do(script,**kargs):
             return sub
         elif re.match("^\".*[^\\\\]*\"$",c):
             obj = zstr(re.match("^\"(?P<value>.*)\"$",c)["value"])
-            if kargs.get("interpret",False) and not kargs.get("call",False): print(obj.raw)
+            if kargs.get("interpret",False) and not kargs.get("call",False): print(obj._raw())
             return obj
         elif re.match("^\d+$",c):
             obj = zint(re.match("^(?P<value>\d+)$",c)["value"])
-            if kargs.get("interpret",False) and not kargs.get("call",False): print(obj.raw)
+            if kargs.get("interpret",False) and not kargs.get("call",False): print(obj._raw())
+            return obj
+        elif re.match("^\d+\.\d*$",c):
+            obj = zfloat(re.match("^(?P<value>\d+\.\d*)$",c)["value"])
+            if kargs.get("interpret",False) and not kargs.get("call",False): print(obj._raw())
             return obj
         elif re.match("^[^ \d][^ ]*?\(.*\)$",c):
             m = re.match("^(?P<fname>[^ ]*?)\((?P<args>.*)\)$",c)
@@ -87,7 +93,7 @@ def do(script,**kargs):
             return v
         elif re.match("^[^ \d\.][^ \.]*$",c):
             try:
-                if kargs.get("interpret",False) and not kargs.get("call",False): print(var[c].raw)
+                if kargs.get("interpret",False) and not kargs.get("call",False): print(var[c]._raw())
                 return var[c]
             except:
                 raise NameError(f"Variable {c} is not defined.")
