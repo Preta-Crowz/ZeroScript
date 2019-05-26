@@ -1,54 +1,79 @@
-class zstr:
-    def __init__(self,value):
-        self.value = str(value)
-        self._pyObject = str(value)
-        self._class = zstr
-        self.raw = "\""+str(value)+"\""
+class zobj:
+    def __init__(self,raw):
+        value = self._preset(raw)
+        self._set(value)
+        self.properties = {
+            "val": {},
+            "func": {}
+        }
+        self._class = type(self)
 
-class zbyte:
-    def __init__(self,value):
+    def _preset(self,raw):
+        return raw
+
+    def _set(self,value):
         self.value = value
         self._pyObject = value
-        self._class = zbyte
-        self.raw = "\'"+str(value)+"\'"
 
-class zint:
-    def __init__(self,value):
-        self.value = value
-        self._pyObject = value
-        self._class = zint
-        self.raw = str(value)
+    def _raw(self):
+        return str(self.value)
 
-class zfloat:
-    def __init__(self,value):
-        self.value = value
-        self._pyObject = value
-        self._class = zfloat
-        self.raw = value
 
-class zlist:
-    def __init__(self,*value):
-        self.value = list(value)
-        self._pyObject = list(value)
-        self._class = zlist
-        self.raw = "["+",".join(self.value)+"]"
+class zstr(zobj):
+    def _preset(self,raw):
+        return str(raw)
 
-class zset:
-    def __init__(self,*value):
-        self.value = set(value)
-        self._pyObject = set(value)
-        self._class = zset
-        self.raw = "<"+",".join(self.value)+">"
+    def _raw(self):
+        return "\""+str(self.value)+"\""
 
-class ztuple:
-    def __init__(self,*value):
-        self.value = tuple(value)
-        self._pyObject = tuple(value)
-        self._class = ztuple
-        self.raw = "("+",".join(self.value)+")"
+class zbyte(zobj):
+    def _preset(self,raw):
+        return bytes(raw)
 
-class zdict:
-    def __init__(self,*value):
-        self.value = dict(value)
-        self._pyObject = dict(value)
-        self._class = zdict
+    def _raw(self):
+        return "\'"+str(self.value)[2:-1]+"\'"
+
+class zint(zobj):
+    def _preset(self,raw):
+        return int(raw)
+
+    def _raw(self):
+        return str(self.value)
+
+class zfloat(zobj):
+    def _preset(self,raw):
+        return float(raw)
+
+    def _raw(self):
+        return str(self.value)
+
+class zlist(zobj):
+    def _preset(self,raw):
+        return list(raw)
+        
+    def _raw(self):
+        return "["+",".join(self.value)+"]"
+
+class zset(zobj):
+    def _preset(self,raw):
+        return set(raw)
+        
+    def _raw(self):
+        return "<"+",".join(self.value)+">"
+
+class ztuple(zobj):
+    def _preset(self,raw):
+        return tuple(raw)
+        
+    def _raw(self):
+        return "("+",".join(self.value)+")"
+
+class zdict(zobj):
+    def _preset(self,raw):
+        return dict(raw)
+        
+    def _raw(self):
+        r = "{"
+        for k in self.value.keys():
+            r += f"\"{k}\":{self.value[k]},"
+        return r[:-1]+"}"
